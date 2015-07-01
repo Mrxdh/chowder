@@ -1,0 +1,134 @@
+
+grunt 文件合并
+1，编译压缩源码，比如less和coffee
+2，执行语法检查和单元测试，比如jshint和qunit
+3，拼接sprite，如果没有合适的工具，这一直是一个很繁琐很费时的操作，还好我们有glue。
+4，部署代码，比如上传图片到cnd，上传压缩后的代码到线上。这个因为每个公司甚至每个项目都不同，很难统一处理。
+
+来算算结果
+var b="221";
+function a(){
+    console.log(this.b);
+}
+var c={
+    d:function(fn){
+        a();
+        arguments[0]();
+        setTimeout(a,0);
+        var e=setInterval(a,0);
+        clearInterval(e);
+    }
+};
+c.d(a);
+结果是 
+221
+undefined
+221(这个221是setInterval的产物)
+
+b/i strong/em的区别
+b和strong 基本没有区别
+i是表示倾斜
+em则表示强调其实表现上还是倾斜 语意不一样
+
+说一些APP 布局兼容策略（微信开发必备）
+这里字体我建议rem来设置，因为这样的话只需要关注body整体的字体，想变大就变大，想变小就变小，兼容情况IE9+
+1.弹性盒子布局 display:flex(box-inline)
+     有点：简单易用
+     缺点：这种实现方式很难实现全部设备兼容的可能性
+2.流式布局：用百分比布局，然后通过调控max-width来实现类似栅格系统
+    这种方式布局调试兼容性的适合会蛋疼，适用于一些特别简单的页面
+3.响应式布局：用媒体查询的方式media的方式来布局，对各个分辨率的屏幕进行细化结构
+	优点：理论上可以兼容所有设备的应用
+        缺点：这种布局方式很蛋疼，在改兼容性的适合，会改的蛋疼，几种媒体集合来回切换
+4.js布局：用js通过设置页面的css属性来达到兼容的效果
+优点：理论上可以兼容所有设备的应用
+        缺点：会产生复杂的判断，使运行效率下降，对于网卡的用户，用户体验会极致的下降
+
+
+box-sizing  
+有4种方式
+border-box 用来减去padding内边框和边框 前提是设置好固定宽高
+content-box 在宽和高之外内边距和边框 其实基本上和原来一样
+inherit 继承上级节点的box-sizing的属性设置
+initial 初始化默认设置
+
+jsonp
+JSONP是一种依靠开发人员的聪明才智创造出的一种非官方跨域数据交互协议。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。
+JSON的优点：
+
+1、基于纯文本，跨平台传递极其简单；
+
+2、Javascript原生支持，后台语言几乎全部支持；
+
+3、轻量级数据格式，占用字符数量极少，特别适合互联网传递；
+
+4、可读性较强，虽然比不上XML那么一目了然，但在合理的依次缩进之后还是很容易识别的；
+
+5、容易编写和解析，当然前提是你要知道数据结构；
+
+JSON的缺点当然也有，但在作者看来实在是无关紧要的东西，所以不再单独说明。
+
+实现方式直接上代码
+<script type="text/javascript">
+    var flightHandler = function(data){
+    };
+    var url = "http://www.lagou.com/js/list_count.js?v=1.5.6_2015062918";    // 创建script标签，设置其属性
+    var script = document.createElement('script');
+    script.setAttribute('src', url);    // 把script标签加入head，此时调用开始
+    document.getElementsByTagName('head')[0].appendChild(script);
+</script>
+script type="text/javascript">
+    var url_show = “XXX";
+    function reqHotwords(json){
+        console.log(json);
+    }
+    function postoA(params){
+        $.ajax({
+            url: url_show,
+            data:params,
+            dataType: 'jsonp',
+            success: function(rs){
+                console.log(rs);
+            },
+            error: function(rs){ console.log('aerror');}
+        });
+    }
+    postoA(url_show);
+</script>
+显示调用
+因为Script文件一定是后加载的所以加载起来会直接调用现成的JS文件中的方法 
+所以不管是传输JSON数据  还是实现方法，都要先定义方法
+http://www.kankanews.com/ICkengine/archives/96670.shtml
+Cookie 和 localStroage 的区别
+1.Cookie 是基于请求的， LocalStorage 是基于配置的(这是本质区别)
+2.Cookie 基本存在各个浏览器差异具体来讲：
+IE6以下 最多20个
+IE7 最多支持50个
+FIREFOX 最多支持50个
+Opera 最多支持30个
+Safari 和 Chrome 对此无上限，
+LocalStorage 不兼容IE6/7
+3.Cookie 其实只有4095B~2K 大小，LocalStorage 基本无上限
+
+模拟弹框
+
+就是按照三种confirm、alert、prompt弹框 模拟窗口，实现类似的效果，把具体的可变的实现封装起来，
+
+模拟滚动条
+定义2个div
+<div>
+<div></div>
+</div>
+外层是上下滚动的长条，中间是用户拖动的，然后监听鼠标事件和滚动事件分别是(mousewheel,兼容火狐DOMMouseScroll)，然后移动时改变div(top)或者改变浏览器scrollTop值 实现滚动的效果
+
+
+
+banner的插件
+具体滚动可以参照Jquery的animate方法，我们要实现的是无缝滚动，很多banner到达最后一张的适合往往会页面翻转到第一张，这很不科学，我们只需要复制节点将
+比如
+<ul><li>第一张</li><li>第二张</li><li>第三张</li></ul>
+我们将第三个节点插到第一个节点前面将第一个节点插入到第三个节点后面，具体顺序自己考虑实现后的效果
+<ul><li>第三张</li>
+<li>第一张</li><li>第二张</li><li>第三张</li><li>第一张</li>
+</ul>
+在到达第三张的时候，向后翻到第四张然后animate事件回调将UL的位置放到第一张的位置
